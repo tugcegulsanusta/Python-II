@@ -11,10 +11,15 @@ in this game"""
 
 class Player:
     def move(self):
-        return 'rock'
+        pass
 
     def learn(self, my_move, their_move):
         pass
+
+
+class RandomPlayer(Player):
+    def move(self):
+        return random.choice(moves)
 
 
 def beats(one, two):
@@ -44,5 +49,5 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game(Player(), Player())
+    game = Game(RandomPlayer(), RandomPlayer())
     game.play_game()

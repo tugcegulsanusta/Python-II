@@ -46,24 +46,24 @@ class Game:
     def __init__(self, p1, p2):
         self.p1 = p1
         self.p2 = p2
+        self.p1_win = 0
+        self.p2_win = 0
 
     def who_wins(self, p1, p2):
         result = move_dict[(p1, p2)]
-        p1_win = 0
-        p2_win = 0
         if p1 != p2:
             if result == True:
                 print("** PLAYER ONE WINS **")
-                p1_win += 1
-                print (f"Score: Player One {p1_win}, Player Two {p2_win}")
+                self.p1_win += 1
+                print (f"Score: Player One {self.p1_win}, Player Two {self.p2_win}")
                 
             else:
                 print("** PLAYER TWO WINS **")
-                p2_win += 1
-                print (f"Score: Player One {p1_win}, Player Two {p2_win}")
+                self.p2_win += 1
+                print (f"Score: Player One {self.p1_win}, Player Two {self.p2_win}")
         if p1 == p2:
             print("** TIE **")  
-            print (f"Score: Player One {p1_win}, Player Two {p2_win}")
+            print (f"Score: Player One {self.p1_win}, Player Two {self.p2_win}")
 
 
     

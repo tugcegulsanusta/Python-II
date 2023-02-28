@@ -22,13 +22,45 @@ move_dict = {("rock", "paper"):False,
 
 
 class Player:
+    def __init__(self):
+        self.my_move = None
+        self.their_move = None
+
+
     def move(self):
         pass
+
 
     def learn(self, my_move, their_move):
         pass
 
 
+
+class RockPlayer(Player):
+    def move(self):
+        return "rock"
+
+
+class ReflectPlayer(Player):
+    def move(self):
+        if self.their_move is None:
+            return random.choice(moves)
+        return self.their_move
+    def learn(self, my_move, their_move):
+        self.their_move = their_move
+
+
+class CyclePlayer(Player):
+    def move(self):    
+        if self.their_move == moves[0]:
+            self.my_move= moves[1]
+        if self.their_move == moves[1]:
+            self.my_move = moves[2]
+        if self.their_move == moves[2]:
+            self.my_move= moves[0]
+        return random.choice(moves)
+
+        
 class RandomPlayer(Player):
     def move(self):
         return random.choice(moves)
@@ -41,13 +73,13 @@ class HumanPlayer(Player):
             human_move = input("Rock, paper, scissors? > ").lower()
         return human_move
     
-class Game:
-    
+class Game:   
     def __init__(self, p1, p2):
         self.p1 = p1
         self.p2 = p2
         self.p1_win = 0
         self.p2_win = 0
+
 
     def who_wins(self, p1, p2):
         result = move_dict[(p1, p2)]
@@ -65,8 +97,7 @@ class Game:
             print("** TIE **")  
             print (f"Score: Player One {self.p1_win}, Player Two {self.p2_win}")
 
-
-    
+ 
     def play_round(self):
         move1 = self.p1.move()
         move2 = self.p2.move()
@@ -85,5 +116,5 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game(HumanPlayer(), RandomPlayer())
+    game = Game(RockPlayer(), CyclePlayer())
     game.play_game()

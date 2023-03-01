@@ -40,6 +40,9 @@ class RockPlayer(Player):
     def move(self):
         return "rock"
 
+    def learn(self, my_move, their_move):
+        pass
+
 
 class ReflectPlayer(Player):
     def move(self):
@@ -61,21 +64,28 @@ class CyclePlayer(Player):
             self.my_move = moves[0]
         return random.choice(moves)
 
+    def learn(self, my_move, their_move):
+        self.my_move = my_move
+
 
 class RandomPlayer(Player):
     def move(self):
         return random.choice(moves)
 
+    def learn(self, my_move, their_move):
+        pass
+
 
 class HumanPlayer(Player):
     def move(self):
-        human_move = input("Rock, paper, scissors? > ").lower()
-        while human_move not in moves:
-            if human_move == "quit":
-                sys.exit("Game ended")
-            else:
-                human_move = input("Rock, paper, scissors? > ").lower()
-        return human_move
+        while True:
+            human_move = input("Rock, paper, scissors? > ").lower()
+            if human_move in moves:
+                return human_move
+            print(f"The move {human_move} is invalid. Try again.")
+
+    def learn(self, my_move, their_move):
+        pass
 
 
 class Game:
@@ -92,17 +102,17 @@ class Game:
                 print("** PLAYER ONE WINS **")
                 self.p1_win += 1
                 print(f"Score: Player One {self.p1_win},"
-                      + "Player Two {self.p2_win}")
+                      + f"Player Two {self.p2_win} ")
 
             else:
                 print("** PLAYER TWO WINS **")
                 self.p2_win += 1
                 print(f"Score: Player One {self.p1_win},"
-                      + " Player Two {self.p2_win}")
+                      + f" Player Two {self.p2_win}")
         if p1 == p2:
             print("** TIE **")
             print(f"Score: Player One {self.p1_win},"
-                  + " Player Two {self.p2_win}")
+                  + f" Player Two {self.p2_win}")
 
     def play_round(self):
         move1 = self.p1.move()
@@ -112,14 +122,69 @@ class Game:
         self.p1.learn(move1, move2)
         self.p2.learn(move2, move1)
 
+    def overall_score(self):
+        if self.p1_win > self.p2_win:
+            print("**** The winner is Player 1 ****\n "
+                  + f"Score: Player One {self.p1_win}, "
+                  + f"Player Two {self.p2_win}")
+        if self.p1_win < self.p2_win:
+            print("**** The winner is Player 2 ****\n "
+                  + f"Score: Player One {self.p1_win}, "
+                  + f"Player Two {self.p2_win}")
+        if self.p1_win == self.p2_win:
+            print("**** No winner this time, it's a tie! **** \n"
+                  + f"Score: Player One {self.p1_win}, "
+                  + f"Player Two {self.p2_win}")
+
     def play_game(self):
         print("Rock Paper Scissors, Go! \n")
         for round in range(3):
             print(f"Round: {round} --")
             self.play_round()
-        print("Game over!")
+        if self.p1_win > self.p2_win:
+            print("Player 1 won")
+        if self.p1_win < self.p2_win:
+            print("Player 2 won")
+        self.overall_score()
+
+
+def valid_input(prompt, options):
+    while True:
+        option = input(prompt).lower()
+        if option in options:
+            return option
+        print(f"Please enter a valid input (Rock, Paper or Scissors) >")
+
+
+def play_again():
+    choise = valid_input("Press 'q' to quit or 'c' to continue > ", ['q', 'c'])
+    if choise == "q":
+        sys.exit("Goodbye!")
+
+
+def choose_opponent():
+    return valid_input("Please choose your opponent:\n"
+                       "1 - Always rock\n"
+                       "2 - Random\n"
+                       "3 - Reflect\n"
+                       "4 - Cycle\n",
+                       ["1", "2", "3", "4"])
+
+
+def game():
+    while True:
+        opponents = {
+            "1": RockPlayer(),
+            "2": RandomPlayer(),
+            "3": ReflectPlayer(),
+            "4": CyclePlayer()
+        }
+        p1 = HumanPlayer()
+        p2 = opponents[choose_opponent()]
+        game = Game(p1, p2)
+        game.play_game()
+        play_again()
 
 
 if __name__ == "__main__":
-    game = Game(RockPlayer(), CyclePlayer())
-    game.play_game()
+    game()

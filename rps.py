@@ -57,11 +57,11 @@ class ReflectPlayer(Player):
 class CyclePlayer(Player):
     def move(self):
         if self.my_move == moves[0]:
-            self.my_move = moves[1]
+            return moves[1]
         if self.my_move == moves[1]:
-            self.my_move = moves[2]
+            return moves[2]
         if self.my_move == moves[2]:
-            self.my_move = moves[0]
+            return moves[0]
         return random.choice(moves)
 
     def learn(self, my_move, their_move):
@@ -138,7 +138,8 @@ class Game:
 
     def play_game(self):
         print("Rock Paper Scissors, Go! \n")
-        for round in range(3):
+        self.rounds = 3
+        for round in range(self.rounds):
             print(f"Round: {round} --")
             self.play_round()
         if self.p1_win > self.p2_win:

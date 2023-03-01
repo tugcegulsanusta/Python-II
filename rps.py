@@ -56,11 +56,11 @@ class ReflectPlayer(Player):
 
 class CyclePlayer(Player):
     def move(self):
-        if self.their_move == moves[0]:
+        if self.my_move == moves[0]:
             self.my_move = moves[1]
-        if self.their_move == moves[1]:
+        if self.my_move == moves[1]:
             self.my_move = moves[2]
-        if self.their_move == moves[2]:
+        if self.my_move == moves[2]:
             self.my_move = moves[0]
         return random.choice(moves)
 
